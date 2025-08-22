@@ -1,0 +1,36 @@
+{
+  "name": "@tempeh/state",
+  "version": "0.1.0",
+  "description": "Enhanced state management utilities for Tempeh CLI",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo"
+  },
+  "dependencies": {
+    "@tempeh/api": "workspace:*",
+    "@tempeh/types": "workspace:*",
+    "@tempeh/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

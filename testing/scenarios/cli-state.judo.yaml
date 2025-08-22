@@ -1,0 +1,85 @@
+---
+name: CLI State Commands
+description: Test state management functionality
+
+setup:
+  - mkdir -p "{{test_dir}}/state-test"
+  - cd "{{test_dir}}/state-test"
+
+run:
+  # Test state help
+  state_help:
+    command: "{{cli_path}} state --help"
+    expectCode: 0
+    outputContains:
+      - "Manage Terraform state"
+      - "Commands:"
+      - "show"
+      - "list"
+      - "backup"
+      - "restore"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test state show help
+  state_show_help:
+    command: "{{cli_path}} state show --help"
+    expectCode: 0
+    outputContains:
+      - "Show state information"
+      - "Options:"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test state list help
+  state_list_help:
+    command: "{{cli_path}} state list --help"
+    expectCode: 0
+    outputContains:
+      - "List state resources"
+      - "Options:"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test state backup help
+  state_backup_help:
+    command: "{{cli_path}} state backup --help"
+    expectCode: 0
+    outputContains:
+      - "Create state backup"
+      - "Options:"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test state restore help
+  state_restore_help:
+    command: "{{cli_path}} state restore --help"
+    expectCode: 0
+    outputContains:
+      - "Restore state from backup"
+      - "Options:"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test state show with no state file
+  state_show_no_file:
+    command: "{{cli_path}} state show --state-file nonexistent.tfstate"
+    expectCode: 1
+    outputContains:
+      - "Error:"
+      - "State file not found"
+    outputDoesntContain:
+      - "State information:"
+
+  # Test state backup with no state file
+  state_backup_no_file:
+    command: "{{cli_path}} state backup --state-file nonexistent.tfstate"
+    expectCode: 1
+    outputContains:
+      - "Error:"
+      - "State file not found"
+    outputDoesntContain:
+      - "Backup created successfully"
+
+teardown:
+  - rm -rf "{{test_dir}}/state-test"

@@ -1,0 +1,53 @@
+{
+  "name": "tempeh",
+  "version": "0.1.0",
+  "description": "A modern wrapper around CDKTF with improved workflows, better error messages, and enhanced state management",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "nx run-many --target=build --all",
+    "dev": "nx run-many --target=dev --all",
+    "test": "nx run-many --target=test --all",
+    "lint": "nx run-many --target=lint --all",
+    "format": "nx run-many --target=format --all",
+    "format:check": "nx run-many --target=format:check --all",
+    "type-check": "nx run-many --target=type-check --all",
+    "clean": "nx reset && nx run-many --target=clean --all",
+    "cli:dev": "nx run @tempeh/cli:dev",
+    "cli:build": "nx run @tempeh/cli:build:executable",
+    "cli:bundle": "nx run @tempeh/cli:bundle",
+    "cli:distribute": "nx run @tempeh/cli:distribute",
+    "test:e2e": "cd testing && ./run-judo-tests.sh",
+    "test:e2e:help": "cd testing && judo run scenarios/cli-help.judo.yaml",
+    "test:e2e:init": "cd testing && judo run scenarios/cli-init.judo.yaml",
+    "test:e2e:workflow": "cd testing && judo run scenarios/cli-workflow.judo.yaml",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
+  },
+  "dependencies": {
+    "constructs": "^10.4.2",
+    "effect": "^3.17.8",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.0",
+    "@intuit/judo": "^0.4.3",
+    "@nx/eslint": "^21.4.0",
+    "@nx/js": "^21.4.0",
+    "@nx/vite": "^21.4.0",
+    "@nx/workspace": "^21.4.0",
+    "@types/node": "^24.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
+    "nx": "^21.4.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=24.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "packageManager": "pnpm@10.13.1"
+}

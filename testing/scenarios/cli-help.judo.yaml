@@ -1,0 +1,69 @@
+---
+name: CLI Help Commands
+description: Test basic CLI help functionality and command discovery
+
+run:
+  # Test main help
+  main_help:
+    command: "{{cli_path}} --help"
+    expectCode: 0
+    outputContains:
+      - "A modern wrapper around CDKTF"
+      - "Commands:"
+      - "init"
+      - "deploy"
+      - "plan"
+      - "synth"
+      - "destroy"
+      - "list"
+      - "scan"
+      - "version"
+    outputDoesntContain:
+      - "Error:"
+      - "Cannot find module"
+
+  # Test version command
+  version:
+    command: "{{cli_path}} version"
+    expectCode: 0
+    outputContains:
+      - "0.1.0"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test help for specific commands
+  init_help:
+    command: "{{cli_path}} init --help"
+    expectCode: 0
+    outputContains:
+      - "Initialize a new CDKTF project"
+      - "Options:"
+    outputDoesntContain:
+      - "Error:"
+
+  deploy_help:
+    command: "{{cli_path}} deploy --help"
+    expectCode: 0
+    outputContains:
+      - "Deploy CDKTF stacks"
+      - "Options:"
+    outputDoesntContain:
+      - "Error:"
+
+  plan_help:
+    command: "{{cli_path}} plan --help"
+    expectCode: 0
+    outputContains:
+      - "Show deployment plan for CDKTF stacks"
+      - "Options:"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test invalid command
+  invalid_command:
+    command: "{{cli_path}} invalid-command"
+    expectCode: 1
+    outputContains:
+      - "error: unknown command"
+    outputDoesntContain:
+      - "0.1.0"

@@ -1,0 +1,78 @@
+{
+  "name": "parallel-test",
+  "description": "A sample CDKTF workflow with pre-hooks, main steps, and rollback",
+  "required": true,
+  "preHooks": [
+    {
+      "name": "backup-state",
+      "description": "Create a backup of the current state",
+      "command": "backup-state"
+    }
+  ],
+  "steps": [
+    {
+      "name": "synthesize",
+      "description": "Synthesize the CDKTF application",
+      "command": "synth",
+      "cdktfOptions": {
+        "stack": "default"
+      }
+    },
+    {
+      "name": "plan-deployment",
+      "description": "Create a deployment plan",
+      "command": "plan",
+      "cdktfOptions": {
+        "stack": "default",
+        "refresh": true
+      },
+      "retry": {
+        "maxAttempts": 3,
+        "delayMs": 1000,
+        "backoffMultiplier": 2
+      }
+    },
+    {
+      "name": "deploy",
+      "description": "Deploy the infrastructure",
+      "command": "deploy",
+      "cdktfOptions": {
+        "stack": "default",
+        "autoApprove": true
+      },
+      "condition": {
+        "type": "file-exists",
+        "value": "cdktf.out"
+      }
+    }
+  ],
+  "postHooks": [
+    {
+      "name": "verify-deployment",
+      "description": "Verify the deployment was successful",
+      "command": "wait",
+      "args": [
+        "5000"
+      ]
+    }
+  ],
+  "rollbackSteps": [
+    {
+      "name": "destroy-on-rollback",
+      "description": "Destroy infrastructure on rollback",
+      "command": "destroy",
+      "cdktfOptions": {
+        "stack": "default",
+        "autoApprove": true
+      }
+    },
+    {
+      "name": "restore-state",
+      "description": "Restore state from backup",
+      "command": "restore-state",
+      "args": [
+        "backup-file-path"
+      ]
+    }
+  ]
+}

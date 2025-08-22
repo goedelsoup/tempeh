@@ -1,0 +1,61 @@
+---
+name: CLI Plan and Deploy Commands
+description: Test plan and deploy functionality with a sample project
+
+setup:
+  - mkdir -p "{{test_dir}}/plan-deploy-test"
+  - cd "{{test_dir}}/plan-deploy-test"
+  - |
+    echo '{"name": "test-project", "description": "Test project for CLI testing"}' > tempeh-config.json
+
+run:
+  # Test plan with no project (should fail gracefully)
+  plan_no_project:
+    command: "{{cli_path}} plan --working-dir ."
+    expectCode: 1
+    outputContains:
+      - "Error:"
+      - "No CDKTF project found"
+    outputDoesntContain:
+      - "Plan completed successfully"
+
+  # Test deploy with no project (should fail gracefully)
+  deploy_no_project:
+    command: "{{cli_path}} deploy --working-dir ."
+    expectCode: 1
+    outputContains:
+      - "Error:"
+      - "No CDKTF project found"
+    outputDoesntContain:
+      - "Deployment completed successfully"
+
+  # Test plan with dry-run flag
+  plan_dry_run:
+    command: "{{cli_path}} plan --working-dir . --dry-run"
+    expectCode: 1
+    outputContains:
+      - "Error:"
+    outputDoesntContain:
+      - "Plan completed successfully"
+
+  # Test plan with verbose output
+  plan_verbose:
+    command: "{{cli_path}} plan --working-dir . --verbose"
+    expectCode: 1
+    outputContains:
+      - "Error:"
+      - "DEBUG"
+    outputDoesntContain:
+      - "Plan completed successfully"
+
+  # Test plan with JSON output
+  plan_json:
+    command: "{{cli_path}} plan --working-dir . --json"
+    expectCode: 1
+    outputContains:
+      - "Error:"
+    outputDoesntContain:
+      - "Plan completed successfully"
+
+teardown:
+  - rm -rf "{{test_dir}}/plan-deploy-test"

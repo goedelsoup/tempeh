@@ -1,0 +1,34 @@
+---
+# Judo Configuration for Tempeh CLI Testing
+name: tempeh-cli-tests
+description: End-to-end tests for the Tempeh CLI
+
+# Test environment setup
+setup:
+  # Use the built CLI executable
+  cli_path: "../cli/release/tempeh-simple"
+  
+  # Test directories
+  test_dir: "./test-workspace"
+  temp_dir: "./temp"
+  
+  # Environment variables
+  env:
+    NODE_ENV: test
+    TEMPEH_TEST_MODE: "true"
+    TEMPEH_LOG_LEVEL: "info"
+
+# Test scenarios directory
+scenarios_dir: "./scenarios"
+
+# Output configuration
+output:
+  format: "json"
+  file: "./test-results.json"
+  verbose: true
+
+# Timeout settings
+timeout:
+  command: 30000  # 30 seconds for commands
+  setup: 10000    # 10 seconds for setup
+  teardown: 5000  # 5 seconds for teardown

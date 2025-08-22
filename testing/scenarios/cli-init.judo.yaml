@@ -1,0 +1,52 @@
+---
+name: CLI Init Command
+description: Test project initialization functionality
+
+setup:
+  - mkdir -p "{{test_dir}}/init-test"
+  - cd "{{test_dir}}/init-test"
+
+run:
+  # Test init with default options
+  init_default:
+    command: "{{cli_path}} init --working-dir ."
+    expectCode: 0
+    outputContains:
+      - "Initializing CDKTF project"
+      - "Project initialized successfully"
+    outputDoesntContain:
+      - "Error:"
+      - "Failed to initialize"
+
+  # Test init with custom project name
+  init_custom_name:
+    command: "{{cli_path}} init --working-dir . --name my-custom-project"
+    expectCode: 0
+    outputContains:
+      - "Initializing CDKTF project"
+      - "my-custom-project"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test init with invalid working directory
+  init_invalid_dir:
+    command: "{{cli_path}} init --working-dir /nonexistent/path"
+    expectCode: 1
+    outputContains:
+      - "Error:"
+      - "Working directory"
+    outputDoesntContain:
+      - "Project initialized successfully"
+
+  # Test init with verbose output
+  init_verbose:
+    command: "{{cli_path}} init --working-dir . --verbose"
+    expectCode: 0
+    outputContains:
+      - "Initializing CDKTF project"
+      - "DEBUG"
+    outputDoesntContain:
+      - "Error:"
+
+teardown:
+  - rm -rf "{{test_dir}}/init-test"

@@ -1,0 +1,75 @@
+{
+  "version": "4.0",
+  "terraform_version": "1.0.0",
+  "serial": 1,
+  "lineage": "test-lineage-123",
+  "outputs": {
+    "instance_id": {
+      "value": "i-1234567890abcdef0",
+      "type": "string",
+      "sensitive": false
+    },
+    "password": {
+      "value": "secret-password-123",
+      "type": "string",
+      "sensitive": true
+    },
+    "null_output": null
+  },
+  "resources": [
+    {
+      "module": "root",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "test_instance",
+      "provider": "aws",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "id": "i-1234567890abcdef0",
+            "instance_type": "t3.micro",
+            "ami": "ami-12345678"
+          },
+          "private": "private-data",
+          "dependencies": ["aws_security_group.test_sg"]
+        }
+      ]
+    },
+    {
+      "module": "root",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "test_sg",
+      "provider": "aws",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "id": "sg-1234567890abcdef0",
+            "name": "test-security-group"
+          },
+          "private": "private-data",
+          "dependencies": []
+        }
+      ]
+    },
+    {
+      "module": "root",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "orphaned_instance",
+      "provider": "aws",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "id": "i-0987654321fedcba0"
+          },
+          "private": "private-data",
+          "dependencies": []
+        }
+      ]
+    }
+  ]
+}

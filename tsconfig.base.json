@@ -1,0 +1,36 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "CommonJS",
+    "lib": ["ES2022"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@tempeh/api": ["packages/api/src"],
+      "@tempeh/core": ["packages/core/src"],
+      "@tempeh/project": ["packages/project/src"],
+      "@tempeh/provider": ["packages/provider/src"],
+      "@tempeh/state": ["packages/state/src"],
+      "@tempeh/types": ["packages/types/src"],
+      "@tempeh/utils": ["packages/utils/src"],
+      "@tempeh/workflow": ["packages/workflow/src"]
+    },
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "exclude": ["node_modules", "tmp"]
+}

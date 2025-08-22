@@ -1,0 +1,55 @@
+{
+  "extends": "nx/presets/npm.json",
+  "affected": {
+    "defaultBase": "main"
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "test", "lint", "type-check"]
+      }
+    }
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"]
+    },
+    "test": {
+      "inputs": ["default", "^default", "{workspaceRoot}/vitest.config.ts"]
+    },
+    "lint": {
+      "inputs": ["default", "{workspaceRoot}/biome.json"]
+    },
+    "type-check": {
+      "inputs": ["default", "^default", "{workspaceRoot}/tsconfig.base.json"]
+    }
+  },
+  "projects": {
+    "@tempeh/cli": {
+      "targets": {
+        "dev": {
+          "executor": "nx:run-commands",
+          "options": {
+            "command": "pnpm dev",
+            "cwd": "packages/cli"
+          }
+        }
+      }
+    }
+  },
+  "generators": {
+    "@nx/js:library": {
+      "js": false,
+      "publishable": true,
+      "buildable": true,
+      "testEnvironment": "node"
+    },
+    "@nx/js:application": {
+      "js": false,
+      "bundler": "vite",
+      "testEnvironment": "node"
+    }
+  }
+}

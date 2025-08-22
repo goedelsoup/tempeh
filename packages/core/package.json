@@ -1,0 +1,31 @@
+{
+  "name": "@tempeh/core",
+  "version": "0.1.0",
+  "description": "Core CDKTF wrapper logic for Tempeh CLI",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist node_modules tsconfig.tsbuildinfo"
+  },
+  "dependencies": {
+    "@cdktf/cli-core": "^0.21.0",
+    "@cdktf/commons": "^0.21.0",
+    "@cdktf/hcl-tools": "^0.21.0",
+    "@tempeh/api": "workspace:*",
+    "@tempeh/state": "workspace:*",
+    "@tempeh/types": "workspace:*",
+    "@tempeh/utils": "workspace:*",
+    "cdktf": "^0.21.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

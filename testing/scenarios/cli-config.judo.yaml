@@ -1,0 +1,76 @@
+---
+name: CLI Config Commands
+description: Test configuration management functionality
+
+setup:
+  - mkdir -p "{{test_dir}}/config-test"
+  - cd "{{test_dir}}/config-test"
+
+run:
+  # Test config help
+  config_help:
+    command: "{{cli_path}} config --help"
+    expectCode: 0
+    outputContains:
+      - "Manage Tempeh configuration"
+      - "Commands:"
+      - "validate"
+      - "show"
+      - "set"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test config validate help
+  config_validate_help:
+    command: "{{cli_path}} config validate --help"
+    expectCode: 0
+    outputContains:
+      - "Validate configuration"
+      - "Options:"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test config show help
+  config_show_help:
+    command: "{{cli_path}} config show --help"
+    expectCode: 0
+    outputContains:
+      - "Show configuration"
+      - "Options:"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test config validate with non-existent file
+  config_validate_no_file:
+    command: "{{cli_path}} config validate --file nonexistent.yaml"
+    expectCode: 1
+    outputContains:
+      - "Error:"
+      - "Configuration file not found"
+    outputDoesntContain:
+      - "Configuration is valid"
+
+  # Test config show with non-existent file
+  config_show_no_file:
+    command: "{{cli_path}} config show --file nonexistent.yaml"
+    expectCode: 1
+    outputContains:
+      - "Error:"
+      - "Configuration file not found"
+    outputDoesntContain:
+      - "Configuration:"
+
+  # Test config validate with invalid JSON
+  config_validate_invalid:
+    command: |
+      echo '{"invalid": "json", "missing": "closing brace"' > invalid-config.json
+      {{cli_path}} config validate --file invalid-config.json
+    expectCode: 1
+    outputContains:
+      - "Error:"
+      - "Invalid configuration"
+    outputDoesntContain:
+      - "Configuration is valid"
+
+teardown:
+  - rm -rf "{{test_dir}}/config-test"

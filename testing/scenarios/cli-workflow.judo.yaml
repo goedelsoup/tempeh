@@ -1,0 +1,85 @@
+---
+name: CLI Workflow Commands
+description: Test workflow command functionality
+
+setup:
+  - mkdir -p "{{test_dir}}/workflow-test"
+  - cd "{{test_dir}}/workflow-test"
+
+run:
+  # Test workflow help
+  workflow_help:
+    command: "{{cli_path}} workflow --help"
+    expectCode: 0
+    outputContains:
+      - "Manage CDKTF workflows"
+      - "Commands:"
+      - "run"
+      - "validate"
+      - "create"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test workflow run help
+  workflow_run_help:
+    command: "{{cli_path}} workflow run --help"
+    expectCode: 0
+    outputContains:
+      - "Execute a workflow"
+      - "Options:"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test workflow validate help
+  workflow_validate_help:
+    command: "{{cli_path}} workflow validate --help"
+    expectCode: 0
+    outputContains:
+      - "Validate a workflow"
+      - "Options:"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test workflow create help
+  workflow_create_help:
+    command: "{{cli_path}} workflow create --help"
+    expectCode: 0
+    outputContains:
+      - "Create a sample workflow file"
+      - "Options:"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test workflow run with non-existent file
+  workflow_run_no_file:
+    command: "{{cli_path}} workflow run --file nonexistent.json"
+    expectCode: 1
+    outputContains:
+      - "Error:"
+      - "Workflow file not found"
+    outputDoesntContain:
+      - "Workflow executed successfully"
+
+  # Test workflow create with default options
+  workflow_create_default:
+    command: "{{cli_path}} workflow create"
+    expectCode: 0
+    outputContains:
+      - "Sample workflow created"
+      - "tempeh-workflow.json"
+    outputDoesntContain:
+      - "Error:"
+
+  # Test workflow create with custom name
+  workflow_create_custom:
+    command: "{{cli_path}} workflow create --name my-workflow --file custom-workflow.json"
+    expectCode: 0
+    outputContains:
+      - "Sample workflow created"
+      - "custom-workflow.json"
+      - "my-workflow"
+    outputDoesntContain:
+      - "Error:"
+
+teardown:
+  - rm -rf "{{test_dir}}/workflow-test"

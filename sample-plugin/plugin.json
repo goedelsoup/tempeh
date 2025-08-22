@@ -1,0 +1,43 @@
+{
+  "id": "aws-rollback-plugin",
+  "name": "AWS Rollback Plugin",
+  "version": "1.0.0",
+  "description": "Advanced AWS-specific rollback strategies for Tempeh",
+  "author": "Tempeh Team",
+  "license": "MIT",
+  "homepage": "https://github.com/tempeh/aws-rollback-plugin",
+  "repository": "https://github.com/tempeh/aws-rollback-plugin",
+  "keywords": ["aws", "rollback", "cloud", "infrastructure"],
+  "dependencies": [],
+  "peerDependencies": ["@aws-sdk/client-ec2", "@aws-sdk/client-rds"],
+  "capabilities": [
+    {
+      "type": "rollback-strategy",
+      "name": "aws-graceful-rollback",
+      "description": "Graceful AWS resource rollback with health checks",
+      "version": "1.0.0",
+      "configurable": true
+    },
+    {
+      "type": "rollback-strategy",
+      "name": "aws-emergency-rollback",
+      "description": "Emergency AWS resource destruction for critical failures",
+      "version": "1.0.0",
+      "configurable": true
+    },
+    {
+      "type": "validator",
+      "name": "aws-resource-validator",
+      "description": "Validates AWS resource configurations",
+      "version": "1.0.0",
+      "configurable": false
+    },
+    {
+      "type": "command",
+      "name": "aws-health-check",
+      "description": "Check AWS resource health status",
+      "version": "1.0.0",
+      "configurable": true
+    }
+  ]
+}

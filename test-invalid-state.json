@@ -1,0 +1,70 @@
+{
+  "version": "",
+  "terraform_version": "1.0.0",
+  "serial": "invalid",
+  "lineage": "test-lineage-123",
+  "outputs": {
+    "instance_id": {
+      "value": "i-1234567890abcdef0",
+      "type": "string",
+      "sensitive": false
+    },
+    "password": "secret-password-123",
+    "null_output": null
+  },
+  "resources": [
+    {
+      "module": "root",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "test_instance",
+      "provider": "",
+      "instances": []
+    },
+    {
+      "module": "root",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "test_instance",
+      "provider": "aws",
+      "instances": [
+        {
+          "schema_version": "invalid",
+          "attributes": null,
+          "private": "private-data",
+          "dependencies": "not-an-array"
+        }
+      ]
+    },
+    {
+      "module": "root",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "instance1",
+      "provider": "aws",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {},
+          "private": "private-data",
+          "dependencies": ["aws_instance.instance2"]
+        }
+      ]
+    },
+    {
+      "module": "root",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "instance2",
+      "provider": "aws",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {},
+          "private": "private-data",
+          "dependencies": ["aws_instance.instance1"]
+        }
+      ]
+    }
+  ]
+}

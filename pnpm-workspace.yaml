@@ -1,0 +1,9 @@
+packages:
+  - cli
+  - packages/*
+
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - '@cdktf/node-pty-prebuilt-multiarch'
+  - esbuild
+  - nx
