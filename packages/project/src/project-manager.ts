@@ -1,44 +1,88 @@
+
+import type { PathLike } from 'node:fs';
+
+import * as Cause from 'effect/Cause';
 import * as Effect from 'effect/Effect';
+import * as Option from 'effect/Option';
+import * as Ref from 'effect/Ref';
+
 import type { TempehError } from '@tempeh/types';
+import { createTempehError } from '@tempeh/utils';
+import type { ProjectId } from './types';
 
 // ============================================================================
 // Project Manager Implementation
 // ============================================================================
+type Result<T> = Effect.Effect<T, TempehError>;
+type RawProjectEntry = Record<string, unknown>;
+type VoidResult = Result<void>;
 
 export class ProjectManagerImpl {
-  // @ts-ignore - Placeholder implementation
-  private _workingDir: string;
+  private projects: Ref.Ref<RawProjectEntry[]>;
 
-  constructor(workingDir: string) {
-    this._workingDir = workingDir;
+  constructor(
+    private base: PathLike,
+  ) {
+    this.projects = Ref.unsafeMake([] as RawProjectEntry[]);
   }
 
   // ============================================================================
   // Project Management
   // ============================================================================
 
-  listProjects(): Effect.Effect<Record<string, unknown>[], TempehError> {
-    return Effect.succeed([]);
+  listProjects(): Result<RawProjectEntry[]> {
+    return this.projects.get;
   }
 
-  getProject(projectId: string): Effect.Effect<Record<string, unknown>, TempehError> {
-    return Effect.fail(new Error(`Project ${projectId} not found`) as TempehError);
+  getProject(id: ProjectId): Result<RawProjectEntry> {
+    const program = Effect.gen(this, function* () {
+      const projects = yield* this.projects.get;
+      const maybeProject = this.findProjectById(projects, id);
+      return maybeProject
+        .pipe(Effect.mapErrorCause(this.handleNotFound(id)))
+    });
+    return program.pipe(Effect.flatten);
   }
 
-  createProject(_name: string, _options?: Record<string, unknown>): Effect.Effect<Record<string, unknown>, TempehError> {
-    return Effect.succeed({ id: 'mock-project', name: 'Mock Project' });
+  createProject(id: ProjectId, _options?: RawProjectEntry): Result<RawProjectEntry> {
+    const program = Effect.gen(this, function* () {
+      yield* this.getProject(id).pipe(Effect.flip)
+        .pipe(Effect.mapError(e => createTempehError(
+          `Entity ${e.id} already exists`,
+          'DUPLICATE_PROJECT_ID',
+        )));
+      return { id, name: id };
+    });
+    return program;
   }
 
-  deleteProject(_projectId: string): Effect.Effect<void, TempehError> {
-    return Effect.succeed(undefined);
+  deleteProject(id: ProjectId): VoidResult {
+    const program = Effect.gen(this, function* () {
+      yield* this.getProject(id);
+      const deleteAction = yield* Ref.update(this.projects, (a) => a);
+      return deleteAction;
+    });
+    return program;
   }
 
-  scanProjects(): Effect.Effect<Record<string, unknown>, TempehError> {
+  scanProjects(): Result<RawProjectEntry> {
     return Effect.succeed({
       totalProjects: 0,
       cdktfProjects: 0,
       terraformProjects: 0,
       projects: []
     });
+  }
+
+  private findProjectById(projects: RawProjectEntry[], id: ProjectId): Option.Option<RawProjectEntry> {
+    const result = projects.find(entry => entry[id]);
+    return result ? Option.some(result) : Option.none();
+  }
+
+  private handleNotFound(id: ProjectId) {
+    return (e: Cause.Cause<Cause.NoSuchElementException>) => createTempehError(
+      `Project not found: ${id} - ${e[Cause.CauseTypeId]}`,
+      'PROJECT_NOT_FOUND'
+    ).pipe(Cause.fail);
   }
 }

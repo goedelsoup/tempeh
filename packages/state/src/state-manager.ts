@@ -3,7 +3,8 @@ import * as Ref from 'effect/Ref';
 import { readJsonFile, writeJsonFile, ensureDirectory } from '@tempeh/utils';
 import { logger } from '@tempeh/utils';
 import type { StateInfo, StateResource } from '@tempeh/types';
-import { StateValidator, type ValidationResult } from './state-validator';
+import { StateValidator } from './state-validator';
+import type { ValidationResult } from './types';
 
 export interface StateManagerOptions {
   stateFile?: string;

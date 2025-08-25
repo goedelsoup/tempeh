@@ -4,16 +4,7 @@ import { join } from 'node:path';
 import { writeJsonFile, readJsonFile } from '@tempeh/utils';
 import { logger } from '@tempeh/utils';
 import type { StateInfo } from '@tempeh/types';
-
-export interface BackupInfo {
-  filename: string;
-  path: string;
-  size: number;
-  createdAt: Date;
-  modifiedAt?: Date;
-  stateVersion: string;
-  terraformVersion: string;
-}
+import type { BackupInfo } from './backup';
 
 export interface StateBackupManagerOptions {
   backupDir: string;
@@ -30,31 +21,31 @@ export class StateBackupManager {
   }
 
   createBackup(state: StateInfo, name?: string): Effect.Effect<string, Error> {
-    return Effect.gen(this, function* (_) {
+    return Effect.gen(this, function* () {
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
       const backupName = name || `state-backup-${timestamp}`;
-      const backupFile = `${this.backupDir}/${backupName}.json`;
+      const backupFile: string = `${this.backupDir}/${backupName}.json`;
 
-      yield* _(logger.debug(`Creating backup: ${backupFile}`));
-      yield* _(writeJsonFile(backupFile, state));
+      yield* logger.debug(`Creating backup: ${backupFile}`);
+      yield* writeJsonFile(backupFile, state);
 
       return backupFile;
     });
   }
 
   listBackups(): Effect.Effect<BackupInfo[], Error> {
-    return Effect.gen(this, function* (_) {
-      yield* _(logger.debug(`Listing backups from ${this.backupDir}`));
+    return Effect.gen(this, function* () {
+      yield* logger.debug(`Listing backups from ${this.backupDir}`);
       
-      const files = yield* _(Effect.promise(() => readdir(this.backupDir)));
+      const files = yield* Effect.promise(() => readdir(this.backupDir));
       const backupFiles = files.filter(file => file.endsWith('.json'));
       const backups: BackupInfo[] = [];
 
       for (const file of backupFiles) {
         try {
           const filePath = join(this.backupDir, file);
-          const stats = yield* _(Effect.promise(() => stat(filePath)));
-          const state = yield* _(readJsonFile<StateInfo>(filePath));
+          const stats = yield* Effect.promise(() => stat(filePath));
+          const state = yield* readJsonFile<StateInfo>(filePath);
           
           if (state?.version && state?.terraformVersion) {
             const stateInfo = state as StateInfo;
@@ -68,9 +59,9 @@ export class StateBackupManager {
               terraformVersion: stateInfo.terraformVersion
             });
           }
-                 } catch {
-           yield* _(logger.warn(`Failed to read backup file: ${file}`));
-         }
+        } catch {
+          yield* logger.warn(`Failed to read backup file: ${file}`);
+        }
       }
       
       return backups.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
@@ -79,29 +70,29 @@ export class StateBackupManager {
 
   restoreBackup(backupFile: string): Effect.Effect<StateInfo, Error> {
     return Effect.gen(this, function* (_) {
-      yield* _(logger.debug(`Restoring backup: ${backupFile}`));
-      return yield* _(readJsonFile<StateInfo>(backupFile));
+      yield* logger.debug(`Restoring backup: ${backupFile}`);
+      return yield* readJsonFile<StateInfo>(backupFile);
     });
   }
 
   deleteBackup(backupFile: string): Effect.Effect<void, Error> {
-    return Effect.gen(this, function* (_) {
-      yield* _(logger.debug(`Deleting backup: ${backupFile}`));
-      yield* _(Effect.promise(() => unlink(backupFile)));
+    return Effect.gen(this, function* () {
+      yield* logger.debug(`Deleting backup: ${backupFile}`);
+      yield* Effect.promise(() => unlink(backupFile));
     });
   }
 
   rotateBackups(keepCount?: number): Effect.Effect<number, Error> {
-    return Effect.gen(this, function* (_) {
+    return Effect.gen(this, function* () {
       const maxBackups = keepCount || this.maxBackups;
-      const backups = yield* _(this.listBackups());
+      const backups = yield* this.listBackups();
       
       if (backups.length > maxBackups) {
         const toDelete = backups.slice(maxBackups);
         
         for (const backup of toDelete) {
-          yield* _(this.deleteBackup(backup.path));
-          yield* _(logger.debug(`Rotated backup: ${backup.filename}`));
+          yield* this.deleteBackup(backup.path);
+          yield* logger.debug(`Rotated backup: ${backup.filename}`);
         }
         
         return toDelete.length;

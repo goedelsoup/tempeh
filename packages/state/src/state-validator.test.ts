@@ -1,22 +1,23 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as Effect from 'effect/Effect';
 import * as Ref from 'effect/Ref';
-import { StateValidator, type ValidationResult, type ValidationIssue } from './state-validator';
-import type { StateInfo, StateResource, StateInstance } from '@tempeh/types';
+import { StateValidator } from './state-validator';
+import type { StateInfo } from '@tempeh/types';
 
 describe('StateValidator', () => {
   let validator: StateValidator;
   let stateRef: Ref.Ref<StateInfo>;
 
   beforeEach(() => {
-    stateRef = Effect.runSync(Ref.make({
+    const info: StateInfo = {
       version: '4.0',
       terraformVersion: '1.0.0',
       serial: 1,
       lineage: 'test-lineage',
       resources: [],
       outputs: {}
-    }));
+    };
+    stateRef = Effect.runSync(Ref.make(info));
     validator = new StateValidator(stateRef);
   });
 
@@ -106,6 +107,7 @@ describe('StateValidator', () => {
       const invalidState: StateInfo = {
         version: '4.0',
         terraformVersion: '1.0.0',
+        // biome-ignore lint/suspicious/noExplicitAny: required for negative test case
         serial: 'invalid' as any,
         lineage: 'test-lineage',
         resources: [],
@@ -130,6 +132,7 @@ describe('StateValidator', () => {
         terraformVersion: '1.0.0',
         serial: 1,
         lineage: 'test-lineage',
+        // biome-ignore lint/suspicious/noExplicitAny: required for negative test case
         resources: 'not-an-array' as any,
         outputs: {}
       };
@@ -153,6 +156,7 @@ describe('StateValidator', () => {
         serial: 1,
         lineage: 'test-lineage',
         resources: [],
+        // biome-ignore lint/suspicious/noExplicitAny: required for negative test case
         outputs: null as any
       };
 
@@ -315,6 +319,7 @@ describe('StateValidator', () => {
             provider: 'aws',
             instances: [
               {
+                // biome-ignore lint/suspicious/noExplicitAny: required for negative test case
                 schemaVersion: 'invalid' as any,
                 attributes: {},
                 private: 'private-data',

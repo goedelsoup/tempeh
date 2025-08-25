@@ -11,6 +11,7 @@ export interface TempehConfig {
   };
   workflows: Record<string, unknown>;
   aliases: Record<string, string>;
+  security: Record<string, string>;
 }
 
 // ============================================================================

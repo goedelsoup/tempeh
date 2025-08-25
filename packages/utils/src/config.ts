@@ -105,6 +105,7 @@ export const getDefaultConfig = (): TempehConfig => {
         ],
       },
     },
+    security: {},
     aliases: {
       prod: 'deploy --stack production',
       dev: 'deploy --stack development',

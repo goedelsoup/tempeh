@@ -25,4 +25,10 @@ export interface StateInfo {
   lineage: string;
   outputs: Record<string, unknown>;
   resources: StateResource[];
+  location?: StateLocation;
+}
+
+export interface StateLocation {
+  protocol?: string;
+  path: string;
 }

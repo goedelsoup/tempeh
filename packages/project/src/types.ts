@@ -1,3 +1,9 @@
+import { Brand } from "effect"
+
+export type ProjectId = string & Brand.Brand<"ProjectId">;
+
+export const ProjectId = Brand.nominal<ProjectId>();
+
 // ============================================================================
 // Project Types
 // ============================================================================

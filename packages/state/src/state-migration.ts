@@ -1,13 +1,7 @@
 import * as Effect from 'effect/Effect';
 import { logger } from '@tempeh/utils';
 import type { StateInfo } from '@tempeh/types';
-
-export interface MigrationResult {
-  success: boolean;
-  migratedState?: StateInfo;
-  warnings: string[];
-  errors: string[];
-}
+import type { MigrationResult } from './migration';
 
 export interface MigrationRule {
   name: string;

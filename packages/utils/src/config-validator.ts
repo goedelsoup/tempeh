@@ -367,6 +367,7 @@ export class ConfigurationValidator {
     // Validate nested schemas
     if (schema.nested) {
       for (const [nestedKey, nestedSchema] of Object.entries(schema.nested)) {
+        // biome-ignore lint/suspicious/noExplicitAny: needed for dynamic validation
         const nestedValue = (config as any)[nestedKey];
         if (nestedValue !== undefined) {
           const nestedResult = this.validateNestedObject(nestedValue, nestedSchema, nestedKey);
@@ -553,10 +554,10 @@ export class ConfigurationValidator {
 
     // Check for insecure defaults
     if (context.validationLevel === 'strict') {
-      if ((config as any).security?.allowInsecureConnections) {
+      if (config.security?.allowInsecureConnections) {
         errors.push({
           field: 'security.allowInsecureConnections',
-          value: (config as any).security?.allowInsecureConnections,
+          value: config.security?.allowInsecureConnections,
           message: 'Insecure connections are not allowed in strict mode',
           severity: 'error',
           code: 'INSECURE_CONNECTION_ERROR'

@@ -1,5 +1,5 @@
 import * as Effect from 'effect/Effect';
-import { logger } from './logger';
+import { logger } from '../logger';
 import { TempehError } from '@tempeh/types';
 import type { Plugin, PluginLoader, PluginValidationResult } from '@tempeh/types';
 

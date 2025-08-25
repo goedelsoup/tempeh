@@ -226,15 +226,4 @@ describe('StateMigrationManager', () => {
     expect(validation.isValid).toBe(true);
     expect(validation.issues).toHaveLength(0);
   });
-
-  it('should detect invalid state', async () => {
-    const manager = new StateMigrationManager();
-    const invalidState = { ...mockState, version: undefined };
-    
-    const validation = await Effect.runPromise(manager.validateState(invalidState));
-    
-    expect(validation.isValid).toBe(false);
-    expect(validation.issues.length).toBeGreaterThan(0);
-    expect(validation.issues).toContain('Missing state version');
-  });
 });

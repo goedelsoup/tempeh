@@ -1,36 +1,7 @@
 import * as Effect from 'effect/Effect';
 import * as Ref from 'effect/Ref';
 import type { StateInfo, StateResource, StateInstance } from '@tempeh/types';
-
-// ============================================================================
-// Validation Result Types
-// ============================================================================
-
-export interface ValidationIssue {
-  level: 'error' | 'warning' | 'info';
-  code: string;
-  message: string;
-  resource?: string;
-  module?: string;
-  suggestion?: string;
-}
-
-export interface ValidationResult {
-  isValid: boolean;
-  issues: ValidationIssue[];
-  summary: {
-    totalResources: number;
-    totalOutputs: number;
-    totalModules: number;
-    errorCount: number;
-    warningCount: number;
-    infoCount: number;
-  };
-}
-
-// ============================================================================
-// State Validator Class
-// ============================================================================
+import type { ValidationIssue, ValidationResult } from './types';
 
 export class StateValidator {
   constructor(private state: Ref.Ref<StateInfo>) {}

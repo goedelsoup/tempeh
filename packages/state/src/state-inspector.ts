@@ -2,21 +2,7 @@ import * as Effect from 'effect/Effect';
 import * as Ref from 'effect/Ref';
 import type { StateInfo, StateResource } from '@tempeh/types';
 import { StateError } from '@tempeh/types';
-
-export interface StateAnalysis {
-  totalResources: number;
-  resourceTypes: Record<string, number>;
-  modules: string[];
-  outputs: string[];
-  terraformVersion: string;
-  stateVersion: number;
-}
-
-export interface ResourceFilter {
-  type?: string;
-  module?: string;
-  name?: string;
-}
+import type { ResourceFilter, StateAnalysis } from './types';
 
 export class StateInspector {
   constructor(private state: Ref.Ref<StateInfo>) {}

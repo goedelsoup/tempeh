@@ -28,11 +28,11 @@ export * from './error';
 // ============================================================================
 // Plugin System Exports
 // ============================================================================
-export * from './plugin-manager';
-export * from './plugin-registry';
-export * from './plugin-loader';
+export * from './plugins/plugin-manager';
+export * from './plugins/plugin-registry';
+export * from './plugins/plugin-loader';
 
 // ============================================================================
 // Security System Exports
 // ============================================================================
-export * from './security-audit-manager';
+export * from './security/security-audit-manager';
